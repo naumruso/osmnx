@@ -204,43 +204,43 @@ def get_pause_duration(recursive_delay=5, default_duration=10):
     int
     """
     return 0
-
-    try:
-        response = requests.get(settings.overpass_endpoint.rstrip('/') + '/status', headers=get_http_headers())
-        status = response.text.split('\n')[3]
-        status_first_token = status.split(' ')[0]
-    except Exception:
-        # if we cannot reach the status endpoint or parse its output, log an
-        # error and return default duration
-        log('Unable to query {}/status'.format(settings.overpass_endpoint.rstrip('/')), level=lg.ERROR)
-        return default_duration
-
-    try:
-        # if first token is numeric, it's how many slots you have available - no
-        # wait required
-        available_slots = int(status_first_token)
-        pause_duration = 0
-    except Exception:
-        # if first token is 'Slot', it tells you when your slot will be free
-        if status_first_token == 'Slot':
-            utc_time_str = status.split(' ')[3]
-            utc_time = date_parser.parse(utc_time_str).replace(tzinfo=None)
-            pause_duration = math.ceil((utc_time - dt.datetime.utcnow()).total_seconds())
-            pause_duration = max(pause_duration, 1)
-
-        # if first token is 'Currently', it is currently running a query so
-        # check back in recursive_delay seconds
-        elif status_first_token == 'Currently':
-            time.sleep(recursive_delay)
-            pause_duration = get_pause_duration()
-
-        else:
-            # any other status is unrecognized - log an error and return default
-            # duration
-            log('Unrecognized server status: "{}"'.format(status), level=lg.ERROR)
-            return default_duration
-
-    return pause_duration
+#
+#    try:
+#        response = requests.get(settings.overpass_endpoint.rstrip('/') + '/status', headers=get_http_headers())
+#        status = response.text.split('\n')[3]
+#        status_first_token = status.split(' ')[0]
+#    except Exception:
+#        # if we cannot reach the status endpoint or parse its output, log an
+#        # error and return default duration
+#        log('Unable to query {}/status'.format(settings.overpass_endpoint.rstrip('/')), level=lg.ERROR)
+#        return default_duration
+#
+#    try:
+#        # if first token is numeric, it's how many slots you have available - no
+#        # wait required
+#        available_slots = int(status_first_token)
+#        pause_duration = 0
+#    except Exception:
+#        # if first token is 'Slot', it tells you when your slot will be free
+#        if status_first_token == 'Slot':
+#            utc_time_str = status.split(' ')[3]
+#            utc_time = date_parser.parse(utc_time_str).replace(tzinfo=None)
+#            pause_duration = math.ceil((utc_time - dt.datetime.utcnow()).total_seconds())
+#            pause_duration = max(pause_duration, 1)
+#
+#        # if first token is 'Currently', it is currently running a query so
+#        # check back in recursive_delay seconds
+#        elif status_first_token == 'Currently':
+#            time.sleep(recursive_delay)
+#            pause_duration = get_pause_duration()
+#
+#        else:
+#            # any other status is unrecognized - log an error and return default
+#            # duration
+#            log('Unrecognized server status: "{}"'.format(status), level=lg.ERROR)
+#            return default_duration
+#
+#    return pause_duration
 
 
 def osm_polygon_download(query, limit=1, polygon_geojson=1):
