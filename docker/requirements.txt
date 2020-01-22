@@ -1,5 +1,4 @@
 beautifulsoup4
-bokeh
 bottleneck
 cartopy
 coverage
@@ -18,7 +17,6 @@ psycopg2
 pyproj
 pysal
 pytest
-python == 3.7.*
 rasterio
 seaborn
 scikit-learn
