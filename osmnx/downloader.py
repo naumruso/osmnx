@@ -203,6 +203,7 @@ def get_pause_duration(recursive_delay=5, default_duration=10):
     -------
     int
     """
+    return 0
 
     try:
         response = requests.get(settings.overpass_endpoint.rstrip('/') + '/status', headers=get_http_headers())
